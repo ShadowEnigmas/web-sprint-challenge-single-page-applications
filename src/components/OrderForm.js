@@ -3,45 +3,42 @@ import * from 'yup';
 import axios from 'axios';
 import styled from 'styled-components';
 
-const formSchema = yup.object().shape({
-    name: yup
-    .string()
-    .min(2, 'Name must contain at least 2 characters')
-    .required('Name is a required field'),
-    sizes: yup
-    .string()
-    .oneOf(['Small', 'Medium', 'Large'], 'Please choose a size')
-    .required('Size is a required field'),
-    toppings: yup
-    .string()
-    .required('Please choose at least 1 topping')
-    special: yup
-    .string()
-    .max(255, 'Only 255 characters allowed')
-    })
-
 const Order = () => {
 const [order, setOrder] = useState({
     name: '',
-    size: '',
-    toppings: '',
+    sizes: '',
+    pepperoni: false,
+    sausage: false,
+    bacon: false,
+    onion: false,
+    green_pepper: false
+    pineapple: false,
+    extra_cheese: false,
     special: ''
 })
 const [errors, setErrors] = useState({
     name: '',
-    size: '',
-    toppings: '',
+    sizes: '',
+    pepperoni: false,
+    sausage: false,
+    bacon: false,
+    onion: false,
+    green_pepper: false
+    pineapple: false,
+    extra_cheese: false,
     special: ''
 })
-const [toppings, setToppings] = useState([]);
 const [post, setPost] = useState();
-
-const checkBox = e => {
-    const newTopping = {
-        ...toppings,
-        [e.target.checked]: e.target.value}
-        setToppings(newTopping)
-}
+const formSchema = yup.object().shape({
+    name: yup
+    .string()
+    .required('Name is a required field')
+    .min(2, 'Name must have at least 2 characters'),
+    // sizes: yup
+    // .string()
+    // .max(1, 'Please choose your size')
+    // .required('Please choose your size'),
+})
 const validateChange = ((e) => {
     yup
     .reach(formSchema, e.target.name)
@@ -55,19 +52,6 @@ const validateChange = ((e) => {
     })
 })
 
-const submitForm = (e) => {
-    e.preventDefault();
-    axios.post('http://reqres.in/', order)
-    .then ((res) => {
-        setOrder({
-            name: '',
-            size: '',
-            toppings: '',
-            special: ''
-        })
-    })
-    .catch(errors)
-}
 const inputChange = (e) => {
     e.persist();
     console.log('Change logged');
@@ -76,20 +60,46 @@ const inputChange = (e) => {
         [e.target.name]:
         e.target.type === 'checkbox' ? e.target.checked : e.target.value
     }
+    const formData = {
+        ...order, 
+        [e.target.name]: e.target.value
+    }
     validateChange(e)
     setOrder(newData)
 }
+const submitForm = (e) => {
+    e.preventDefault();
+    console.log('submitted')
+    axios.post('https://reqres.in/api/users', order)
+    .then ((res) => {
+        console.log('success', res.data)
+        setPost(res.data)
+    })
+    .catch('Error', errors)
+    setOrder({
+        name: "",
+        size: "",
+        sauce: "",
+        pepperoni: false,
+        sausage: false,
+        bacon: false,
+        onion: false,
+        green_pepper: false,
+        pineapple: false,
+        extra_cheese: false,
+        special: ""
+    })
 
     return (
         <div>
             <form onSubmit={submitForm}>
                 <label htmlFor='name' />Enter Your Name: <br />
-                <input id='name' type='text' name='name' value={order.name} onChange={inputChange}/>
+                <input id='name' type='text' name='name' data-cy='name' value={order.name} onChange={inputChange}/>
                 {errors.name.length > 0 ? <p className='error'>{errors.name}</p> : null}
                 <br />
                 <label htmlFor='sizes'>Choose Your Size: </label><br />
                 <br />
-                <select id='sizes' name='sizes' value={order.size} onChange={inputChange}>
+                <select id='sizes' name='sizes' data-cy='sizes' value={order.size} onChange={inputChange}>
                     <option value='small' data-cy='sizes'>Small</option>
                     <option value='medium' data-cy='sizes'>Medium</option>
                     <option value='large' data-cy='sizes'>Large</option>
@@ -99,13 +109,13 @@ const inputChange = (e) => {
                 <label htmlFor='toppings' />Choose Your Toppings: 
                 <br/>
                 <br/>
-                <input id='toppings' type='checkbox' onClick={checkBox} checked={order.toppings} onChange={inputChange} name='pepperoni'/>Pepperoni<br/>
-                <input id='toppings' type='checkbox' onClick={checkBox} checked={order.toppings} onChange={inputChange} name='sausage'/>Sausage<br/>
-                <input id='toppings' type='checkbox' onClick={checkBox} checked={order.toppings} onChange={inputChange} name='bacon'/>Canadian Bacon<br/>
-                <input id='toppings' type='checkbox' onClick={checkBox} checked={order.toppings} onChange={inputChange} name='onion'/>Onions<br/>
-                <input id='toppings' type='checkbox' onClick={checkBox} checked={order.toppings} onChange={inputChange} name='green-pepper'/>Green Pepper<br/>
-                <input id='toppings' type='checkbox' onClick={checkBox} checked={order.toppings} onChange={inputChange} name='pineapple'/>Pineapple<br/>
-                <input id='toppings' type='checkbox' onClick={checkBox} checked={order.toppings} onChange={inputChange} name='extra-cheese'/>Extra Cheese<br/>
+                <input id='toppings' type='checkbox' value={order.toppings} onChange={inputChange} data-cy='toppings' name='pepperoni'/>Pepperoni<br/>
+                <input id='toppings' type='checkbox' value={order.toppings} onChange={inputChange} data-cy='toppings' name='sausage'/>Sausage<br/>
+                <input id='toppings' type='checkbox' value={order.toppings} onChange={inputChange} data-cy='toppings' name='bacon'/>Canadian Bacon<br/>
+                <input id='toppings' type='checkbox' value={order.toppings} onChange={inputChange} data-cy='toppings' name='onion'/>Onions<br/>
+                <input id='toppings' type='checkbox' value={order.toppings} onChange={inputChange} data-cy='toppings' name='green_pepper'/>Green Pepper<br/>
+                <input id='toppings' type='checkbox' value={order.toppings} onChange={inputChange} data-cy='toppings' name='pineapple'/>Pineapple<br/>
+                <input id='toppings' type='checkbox' value={order.toppings} onChange={inputChange} data-cy='toppings' name='extra_cheese'/>Extra Cheese<br/>
                 <br/>
                 <label htmlFor='special' />Additional Instructions:
                 <br/>
