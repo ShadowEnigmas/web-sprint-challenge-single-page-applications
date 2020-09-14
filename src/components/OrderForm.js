@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import * from 'yup';
+import * as yup from 'yup';
 import axios from 'axios';
 import styled from 'styled-components';
 
@@ -11,7 +11,7 @@ const [order, setOrder] = useState({
     sausage: false,
     bacon: false,
     onion: false,
-    green_pepper: false
+    green_pepper: false,
     pineapple: false,
     extra_cheese: false,
     special: ''
@@ -23,7 +23,7 @@ const [errors, setErrors] = useState({
     sausage: false,
     bacon: false,
     onion: false,
-    green_pepper: false
+    green_pepper: false,
     pineapple: false,
     extra_cheese: false,
     special: ''
@@ -44,11 +44,12 @@ const validateChange = ((e) => {
     .reach(formSchema, e.target.name)
     .validate(e.target.value)
     .then((valid) => {})
-    .catch(err => {})
-    console.log(err)
-    setErrors({
-        ...errors,
-        [e.target.name]: err.errors[0]
+    .catch((err) => {
+        console.log(err)
+        setErrors({
+            ...errors,
+            [e.target.name]: err.errors[0]
+        })
     })
 })
 
@@ -77,9 +78,9 @@ const submitForm = (e) => {
     })
     .catch('Error', errors)
     setOrder({
-        name: "",
-        size: "",
-        sauce: "",
+        name: '',
+        size: '',
+        sauce: '',
         pepperoni: false,
         sausage: false,
         bacon: false,
@@ -87,13 +88,13 @@ const submitForm = (e) => {
         green_pepper: false,
         pineapple: false,
         extra_cheese: false,
-        special: ""
+        special: '',
     })
 
     return (
         <div>
             <form onSubmit={submitForm}>
-                <label htmlFor='name' />Enter Your Name: <br />
+                <label htmlFor='name' />Name: <br />
                 <input id='name' type='text' name='name' data-cy='name' value={order.name} onChange={inputChange}/>
                 {errors.name.length > 0 ? <p className='error'>{errors.name}</p> : null}
                 <br />
@@ -119,14 +120,13 @@ const submitForm = (e) => {
                 <br/>
                 <label htmlFor='special' />Additional Instructions:
                 <br/>
-                <textarea id='special' name='special'/>
+                <textarea id='special' name='special' placeholder='Anything else we can help with?' data-cy='special' value={order.special} onChange={inputChange} />
                 <br/>
                 <br/>
-                <button id='submit' type='submit' name='submit'>Add to order</button>
+                <button id='submit' type='submit' name='submit' data-cy='submit'>Add to Order</button>
             </form>
             <pre>{JSON.stringify(order, null, 2)}</pre>
         </div>
-    )
-}
-
+    );
+}}
 export default Order;

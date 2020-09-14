@@ -28,6 +28,6 @@ return (
     onClick={() => history.push('/pizza')}>
         Pizza Time!
     </Button>
-</Banner>
+</Head>
 )}
 export default Home; 

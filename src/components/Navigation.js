@@ -23,11 +23,11 @@ const Container = styled.div`
     <Container className='container'>
         <div className='header'>
             Lambda Eats
-            <NavBar className='nav-container'>
+            <Nav className='nav-container'>
                 <ul>
                     <Link to='/'>Home</Link>
                 </ul>
-            </NavBar>
+            </Nav>
         </div>
     </Container>
     )

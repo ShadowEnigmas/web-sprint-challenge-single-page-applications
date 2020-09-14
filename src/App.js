@@ -7,7 +7,7 @@ import Navigation from './components/Navigation'
 const App = () => {
   return (
     <Router>
-    <Navigation>
+    <Navigation/>
       <Route exact path='/' component={Home}/>
       <Route path='/pizza' component={Order}/>
     </Router>
